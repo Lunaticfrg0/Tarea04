@@ -1,63 +1,34 @@
-﻿
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Tarea04.Models;
-using System.Net.NetworkInformation;
+using Tarea04.ViewModels;
 
-
-
-
-namespace Tarea04.ViewModels
+namespace Tarea04.Services
 {
-    class YoutubePageViewModel : INotifyPropertyChanged
+    class ApiService : IApiService
     {
-        public const string ApiKey = "";
-        public string ApiUrlChannel = "https://www.googleapis.com/youtube/v3/search?part=id&maxResults=20&channelId="
-            + "UCBYESMnGmdfFISXEhfF5PlA"
-            + "&key="
-            + ApiKey;
-        public string ApiUrlVideoDetails = "https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id="
-            + "{0}"
-            + "&key="
-            + ApiKey;
-
-        
-
-
-        private List<YoutubeItem> youtubeItems;
-        public List<YoutubeItem> YoutubeItems
+        public YoutubePageViewModel test = new YoutubePageViewModel();
+        public ApiService()
         {
-            get { return youtubeItems; }
-            set
-            {
-                youtubeItems = value;
-                OnPropertyChanged();
-            }
-        }
-        public YoutubePageViewModel()
-        {
-            
-            InitDataAsync();
-            IsConected();
-        }
-        
 
+        }
+      
+        public List<YoutubeItem> youtube = new List<YoutubeItem>();
         public async Task InitDataAsync()
         {
             var videosIds = await GetVideoIdsFromChannelAsync();
         }
-        private async Task<List<string>> GetVideoIdsFromChannelAsync()
+       public async Task<List<string>> GetVideoIdsFromChannelAsync()
         {
             var httpClient = new HttpClient();
 
-            var json = await httpClient.GetStringAsync(ApiUrlChannel);
+            var json = await httpClient.GetStringAsync(test.ApiUrlChannel);
 
             var videoIds = new List<string>();
 
@@ -72,13 +43,13 @@ namespace Tarea04.ViewModels
                     videoIds.Add(item.Value<JObject>("id")?.Value<string>("videoId"));
                 }
 
-                YoutubeItems = await GetVideoDetailsAsync(videoIds);
+                youtube = await GetVideoDetailsAsync(videoIds);
             }
-            catch (Exception exception) {}
+            catch (Exception exception) { }
 
             return videoIds;
         }
-        private async Task<List<YoutubeItem>> GetVideoDetailsAsync(List<string> videoIds)
+        public  async Task<List<YoutubeItem>> GetVideoDetailsAsync(List<string> videoIds)
         {
             var videoIdsString = "";
             foreach (var s in videoIds)
@@ -88,7 +59,7 @@ namespace Tarea04.ViewModels
 
             var httpClient = new HttpClient();
 
-            var json = await httpClient.GetStringAsync(string.Format(ApiUrlVideoDetails, videoIdsString));
+            var json = await httpClient.GetStringAsync(string.Format(test.ApiUrlVideoDetails, videoIdsString));
 
             var youtubeItems = new List<YoutubeItem>();
 
@@ -134,41 +105,6 @@ namespace Tarea04.ViewModels
                 return youtubeItems;
             }
         }
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-        public bool IsConected()
-        {
-            string host = "https://www.google.com";
-            bool result = false;
-            Ping p = new Ping();
-            try
-            {
-                PingReply reply = p.Send(host, 3000);
-                if (reply.Status == IPStatus.Success)
-                    return true;
-                if (result == false)
-                {
-                    Display();
-                }
-            }
-            catch
-            { }
-            
-            return result;
-        }
-        public async void Display()
-        {
-            await App.Current.MainPage.DisplayAlert("No Connection", "No Internet Connection", "Ok");
-        }
-
-
 
     }
-     
 }
