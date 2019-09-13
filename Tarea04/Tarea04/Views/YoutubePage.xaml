@@ -6,11 +6,11 @@
              mc:Ignorable="d"
              x:Class="Tarea04.Views.YoutubePage"
              Title="SoftLabs"
-             
+             BackgroundColor="Black"
              >
     <ContentPage.Content>
-        
-            <ListView ItemsSource="{Binding YoutubeItems}"
+
+        <ListView ItemsSource="{Binding YoutubeItems}"
                       HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -20,21 +20,41 @@
                                    TextColor="Red"
                                        FontSize ="22"
                                        />
+                            <Image Source="{Binding HighThumbnailUrl}"
+                                   HeightRequest="200"/>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="View count:"
+                                       TextColor="White"
+                                       FontSize="20"
+                                       />
                                 <Label Text="{Binding ViewCount}"
                                         TextColor="#0D47A1"
-                                        FontSize="14"
+                                        FontSize="20"
                                        />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" >
+                                <Label Text="Likes:"
+                                       TextColor="White"
+                                       FontSize="20"/>
                                 <Label Text="{Binding LikeCount}"
-                                        TextColor="#2196F3"
-                                        FontSize="14"
+                                        TextColor="Green"
+                                        FontSize="20"
                                        />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Dislikes:"
+                                       TextColor="White"
+                                       FontSize="20"/>
                                 <Label Text="{Binding DislikeCount}"
-                                         TextColor="#0D47A1"
-                                            FontSize="14"
+                                         TextColor="Red"
+                                         FontSize="20"
                                        />
-                                <Label Text="{Binding Description}"
-                                    TextColor="Gray"
-                                    FontSize="14"
+                            </StackLayout>
+                            <Label Text="Video Description: "
+                                   TextColor="White"/>
+                            <Label Text="{Binding Description}"
+                                    TextColor="White"
+                                    FontSize="20"
                                        />
 
                             </StackLayout>
