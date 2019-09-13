@@ -16,7 +16,7 @@ namespace Tarea04.ViewModels
 {
     class YoutubePageViewModel : INotifyPropertyChanged
     {
-        public const string ApiKey = "AIzaSyDwQU4KaJ4jYc-tlnSG2x5kQANqPupbJ40";
+        public const string ApiKey = "";
         public string ApiUrlChannel = "https://www.googleapis.com/youtube/v3/search?part=id&maxResults=20&channelId="
             + "UCBYESMnGmdfFISXEhfF5PlA"
             + "&key="
